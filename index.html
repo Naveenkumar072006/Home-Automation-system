@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Automation System - Premium IoT Home Automation Dashboard</title>
+    
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="Home Automation System is a premium, high-fidelity smart home dashboard simulation. Control lighting, appliances, climate, and security with live telemetry and energy tracking.">
+    <meta name="keywords" content="smart home, home automation, iot dashboard, iot simulation, glassmorphism UI, smart lock, security camera">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- ChartJS for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- External stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Ambient Light Orbs -->
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i data-lucide="cpu" class="logo-icon animate-pulse-slow"></i>
+                </div>
+                <span class="brand-name">Home Automation System</span>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard" id="btn-tab-dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-tab="rooms" id="btn-tab-rooms">
+                    <i data-lucide="home"></i>
+                    <span>Rooms</span>
+                </button>
+                <button class="nav-item" data-tab="routines" id="btn-tab-routines">
+                    <i data-lucide="activity"></i>
+                    <span>Routines</span>
+                </button>
+                <button class="nav-item" data-tab="security" id="btn-tab-security">
+                    <i data-lucide="shield-check"></i>
+                    <span>Security</span>
+                </button>
+                <button class="nav-item" data-tab="analytics" id="btn-tab-analytics">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Analytics</span>
+                </button>
+            </nav>
+
+            <div class="user-profile">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop" alt="Profile" class="profile-img">
+                <div class="profile-info">
+                    <span class="profile-name">Alex Rivera</span>
+                    <span class="profile-role">Home Admin</span>
+                </div>
+                <button class="profile-settings" id="btn-settings-trigger" title="Settings">
+                    <i data-lucide="sliders"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Body Wrapper -->
+        <main class="main-content">
+            <!-- Topbar Header -->
+            <header class="topbar">
+                <div class="header-left">
+                    <h1 class="welcome-title" id="main-heading">Good morning, Alex</h1>
+                    <p class="welcome-subtitle">All systems are running smoothly.</p>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Date & Time Info -->
+                    <div class="datetime-widget">
+                        <i data-lucide="calendar"></i>
+                        <span id="current-date">July 5, 2026</span>
+                        <span class="divider">|</span>
+                        <i data-lucide="clock"></i>
+                        <span id="current-time">10:47 AM</span>
+                    </div>
+
+                    <!-- System Status Pill -->
+                    <div class="status-indicator online">
+                        <span class="indicator-dot"></span>
+                        <span class="indicator-text">System Live</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Quick Mode Selectors -->
+            <section class="quick-modes-bar">
+                <span class="section-title-sm">Quick House Mode:</span>
+                <div class="mode-buttons-group">
+                    <button class="mode-btn active" data-mode="home" id="btn-mode-home">
+                        <i data-lucide="smile"></i>
+                        <span>Home</span>
+                    </button>
+                    <button class="mode-btn" data-mode="away" id="btn-mode-away">
+                        <i data-lucide="log-out"></i>
+                        <span>Away</span>
+                    </button>
+                    <button class="mode-btn" data-mode="night" id="btn-mode-night">
+                        <i data-lucide="moon"></i>
+                        <span>Night</span>
+                    </button>
+                    <button class="mode-btn" data-mode="eco" id="btn-mode-eco">
+                        <i data-lucide="leaf"></i>
+                        <span>Eco Mode</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Dynamic Views Container -->
+            <div class="content-body">
+                
+                <!-- 1. DASHBOARD VIEW -->
+                <div class="view-panel active" id="view-dashboard">
+                    <!-- Quick Statistics Row -->
+                    <div class="stats-grid">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon-wrapper energy">
+                                <i data-lucide="zap"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Power Demand</span>
+                                <span class="stat-val" id="stat-power-demand">0 W</span>
+                                <span class="stat-trend trend-down" id="stat-power-trend"><i data-lucide="trending-down"></i> Eco Active</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon-wrapper devices">
+                                <i data-lucide="power"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Active Devices</span>
+                                <span class="stat-val" id="stat-active-devices">0 / 0</span>
+                                <span class="stat-subtext" id="stat-active-sub">Across 5 Zones</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon-wrapper temp">
+                                <i data-lucide="thermometer"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Avg House Temp</span>
+                                <span class="stat-val" id="stat-avg-temp">72.4°F</span>
+                                <span class="stat-subtext" id="stat-ac-status">A/C Idle</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon-wrapper security">
+                                <i data-lucide="shield"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Security Armed</span>
+                                <span class="stat-val" id="stat-security-status">Secure</span>
+                                <span class="stat-subtext" id="stat-lock-count">4 Locks Engaged</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Dashboard Grid -->
+                    <div class="dashboard-main-grid">
+                        <!-- Left Block: Weather and Live Analytics Graph -->
+                        <div class="grid-left-col">
+                            <div class="weather-row">
+                                <div class="weather-card glass-card">
+                                    <div class="weather-main">
+                                        <div class="weather-temp">
+                                            <span class="temp-num">84</span>
+                                            <span class="temp-unit">°F</span>
+                                        </div>
+                                        <div class="weather-condition">
+                                            <span class="cond-text">Partly Cloudy</span>
+                                            <span class="cond-city">San Francisco, CA</span>
+                                        </div>
+                                    </div>
+                                    <div class="weather-details-grid">
+                                        <div class="w-detail">
+                                            <i data-lucide="droplets"></i>
+                                            <div>
+                                                <span class="w-lbl">Humidity</span>
+                                                <span class="w-val">58%</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-detail">
+                                            <i data-lucide="wind"></i>
+                                            <div>
+                                                <span class="w-lbl">Wind Speed</span>
+                                                <span class="w-val">12 mph</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-detail">
+                                            <i data-lucide="sun"></i>
+                                            <div>
+                                                <span class="w-lbl">UV Index</span>
+                                                <span class="w-val">6 Mod</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chart-card glass-card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i data-lucide="line-chart"></i> Real-time Energy Load</h3>
+                                    <span class="live-pulse">LIVE</span>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="liveEnergyChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Block: Quick Toggles and Alert Logs -->
+                        <div class="grid-right-col">
+                            <div class="quick-controls-card glass-card">
+                                <h3 class="card-title"><i data-lucide="sparkles"></i> Quick Controls</h3>
+                                <div class="quick-toggles-grid">
+                                    <button class="quick-toggle-btn" id="btn-quick-lights">
+                                        <div class="btn-icon"><i data-lucide="lightbulb"></i></div>
+                                        <span class="btn-lbl">All Lights Off</span>
+                                    </button>
+                                    <button class="quick-toggle-btn" id="btn-quick-hvac">
+                                        <div class="btn-icon"><i data-lucide="snowflake"></i></div>
+                                        <span class="btn-lbl">Climate Eco</span>
+                                    </button>
+                                    <button class="quick-toggle-btn" id="btn-quick-locks">
+                                        <div class="btn-icon"><i data-lucide="lock"></i></div>
+                                        <span class="btn-lbl">Lock All Doors</span>
+                                    </button>
+                                    <button class="quick-toggle-btn" id="btn-quick-sprinkler">
+                                        <div class="btn-icon"><i data-lucide="droplet"></i></div>
+                                        <span class="btn-lbl">Water Sprinklers</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="logs-card glass-card">
+                                <div class="card-header">
+                                    <h3 class="card-title"><i data-lucide="terminal"></i> Activity Log</h3>
+                                    <button class="text-btn" id="btn-clear-logs">Clear Logs</button>
+                                </div>
+                                <div class="log-entries" id="log-list">
+                                    <!-- Logs are dynamically populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. ROOMS VIEW -->
+                <div class="view-panel" id="view-rooms">
+                    <!-- Room filter sub-nav -->
+                    <div class="rooms-nav">
+                        <button class="room-filter active" data-room="all">All Rooms</button>
+                        <button class="room-filter" data-room="living-room">Living Room</button>
+                        <button class="room-filter" data-room="kitchen">Kitchen</button>
+                        <button class="room-filter" data-room="bedroom">Bedroom</button>
+                        <button class="room-filter" data-room="bathroom">Bathroom</button>
+                        <button class="room-filter" data-room="outdoor">Backyard & Outdoor</button>
+                    </div>
+
+                    <!-- Room Grid containing device cards -->
+                    <div class="rooms-grid" id="devices-grid">
+                        <!-- Device Cards will be dynamically generated by JS for robustness and modularity -->
+                    </div>
+                </div>
+
+                <!-- 3. ROUTINES VIEW -->
+                <div class="view-panel" id="view-routines">
+                    <div class="routines-layout">
+                        <!-- Preset Routines List -->
+                        <div class="preset-routines-section glass-card">
+                            <h2 class="section-title"><i data-lucide="zap"></i> Preset House Routines</h2>
+                            <p class="section-desc">Instantly trigger multiple smart device state transitions simultaneously.</p>
+                            
+                            <div class="routines-list">
+                                <div class="routine-card" data-routine-trigger="good-morning">
+                                    <div class="routine-meta">
+                                        <div class="routine-icon morning"><i data-lucide="sun"></i></div>
+                                        <div class="routine-info">
+                                            <h3>Good Morning</h3>
+                                            <p>Soft lights, thermostat to 72°F, start Coffee Maker</p>
+                                        </div>
+                                    </div>
+                                    <button class="execute-routine-btn">Run Routine</button>
+                                </div>
+
+                                <div class="routine-card" data-routine-trigger="movie-night">
+                                    <div class="routine-meta">
+                                        <div class="routine-icon movie"><i data-lucide="clapperboard"></i></div>
+                                        <div class="routine-info">
+                                            <h3>Movie Night</h3>
+                                            <p>Living Room lights violet/10%, Smart TV on, AC to 70°F</p>
+                                        </div>
+                                    </div>
+                                    <button class="execute-routine-btn">Run Routine</button>
+                                </div>
+
+                                <div class="routine-card" data-routine-trigger="away">
+                                    <div class="routine-meta">
+                                        <div class="routine-icon away-routine"><i data-lucide="log-out"></i></div>
+                                        <div class="routine-info">
+                                            <h3>Away Mode</h3>
+                                            <p>All lights off, doors locked, AC to 78°F, cameras armed</p>
+                                        </div>
+                                    </div>
+                                    <button class="execute-routine-btn">Run Routine</button>
+                                </div>
+
+                                <div class="routine-card" data-routine-trigger="good-night">
+                                    <div class="routine-meta">
+                                        <div class="routine-icon night-routine"><i data-lucide="moon"></i></div>
+                                        <div class="routine-info">
+                                            <h3>Good Night</h3>
+                                            <p>All lights off, doors locked, bedroom AC to 68°F</p>
+                                        </div>
+                                    </div>
+                                    <button class="execute-routine-btn">Run Routine</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Schedule Creator Panel -->
+                        <div class="schedule-creator-section glass-card">
+                            <h2 class="section-title"><i data-lucide="alarm-clock"></i> Automation Schedules</h2>
+                            <p class="section-desc">Create triggered events based on time or states.</p>
+                            
+                            <form id="routine-schedule-form" class="schedule-form">
+                                <div class="form-group">
+                                    <label for="schedule-name">Schedule Name</label>
+                                    <input type="text" id="schedule-name" placeholder="e.g. Turn off outdoor lights" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="schedule-time">Trigger Time</label>
+                                        <input type="time" id="schedule-time" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="schedule-routine">Routine Action</label>
+                                        <select id="schedule-routine" required>
+                                            <option value="" disabled selected>Select an Action...</option>
+                                            <option value="good-morning">Trigger Good Morning</option>
+                                            <option value="movie-night">Trigger Movie Night</option>
+                                            <option value="away">Trigger Away Mode</option>
+                                            <option value="good-night">Trigger Good Night</option>
+                                            <option value="all-off">All Lights & Appliances Off</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Days of the Week</label>
+                                    <div class="days-checkboxes">
+                                        <label class="day-check"><input type="checkbox" name="days" value="0"> <span>S</span></label>
+                                        <label class="day-check"><input type="checkbox" name="days" value="1" checked> <span>M</span></label>
+                                        <label class="day-check"><input type="checkbox" name="days" value="2" checked> <span>T</span></label>
+                                        <label class="day-check"><input type="checkbox" name="days" value="3" checked> <span>W</span></label>
+                                        <label class="day-check"><input type="checkbox" name="days" value="4" checked> <span>T</span></label>
+                                        <label class="day-check"><input type="checkbox" name="days" value="5" checked> <span>F</span></label>
+                                        <label class="day-check"><input type="checkbox" name="days" value="6"> <span>S</span></label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="submit-btn" id="btn-add-schedule">
+                                    <i data-lucide="plus"></i> Add Automation Rule
+                                </button>
+                            </form>
+
+                            <div class="active-schedules-list">
+                                <h3>Active Schedules</h3>
+                                <div class="schedules-container" id="schedules-list">
+                                    <!-- Dynamic schedule cards -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. SECURITY & CAMERAS VIEW -->
+                <div class="view-panel" id="view-security">
+                    <div class="security-layout">
+                        <!-- Left pane: Cam streams -->
+                        <div class="cams-section">
+                            <div class="cams-header">
+                                <h2><i data-lucide="video"></i> Live Security Camera Feeds</h2>
+                                <span class="record-badge"><span class="red-dot animate-pulse"></span> REC</span>
+                            </div>
+                            
+                            <div class="cams-grid">
+                                <!-- Cam 1: Front Yard -->
+                                <div class="cam-box glass-card">
+                                    <div class="cam-feed-wrapper">
+                                        <canvas class="cam-canvas" id="canvas-cam-front"></canvas>
+                                        <div class="cam-overlay">
+                                            <span class="cam-name">CAM-01: FRONT PORCH</span>
+                                            <span class="cam-fps">1080p @ 30 FPS</span>
+                                            <span class="cam-timestamp" id="cam-ts-1">10:47:05 AM</span>
+                                        </div>
+                                    </div>
+                                    <div class="cam-actions">
+                                        <button class="cam-action-btn toggle-feed" data-cam="front" title="Pause Stream"><i data-lucide="pause"></i></button>
+                                        <button class="cam-action-btn trigger-alert" data-cam="front" title="Simulate Motion"><i data-lucide="activity"></i> Simulate Motion</button>
+                                    </div>
+                                </div>
+
+                                <!-- Cam 2: Backyard -->
+                                <div class="cam-box glass-card">
+                                    <div class="cam-feed-wrapper">
+                                        <canvas class="cam-canvas" id="canvas-cam-back"></canvas>
+                                        <div class="cam-overlay">
+                                            <span class="cam-name">CAM-02: BACKYARD DECK</span>
+                                            <span class="cam-fps">1080p @ 30 FPS</span>
+                                            <span class="cam-timestamp" id="cam-ts-2">10:47:05 AM</span>
+                                        </div>
+                                    </div>
+                                    <div class="cam-actions">
+                                        <button class="cam-action-btn toggle-feed" data-cam="back" title="Pause Stream"><i data-lucide="pause"></i></button>
+                                        <button class="cam-action-btn trigger-alert" data-cam="back" title="Simulate Motion"><i data-lucide="activity"></i> Simulate Motion</button>
+                                    </div>
+                                </div>
+
+                                <!-- Cam 3: Living Room -->
+                                <div class="cam-box glass-card">
+                                    <div class="cam-feed-wrapper">
+                                        <canvas class="cam-canvas" id="canvas-cam-living"></canvas>
+                                        <div class="cam-overlay">
+                                            <span class="cam-name">CAM-03: LIVING AREA</span>
+                                            <span class="cam-fps">1080p @ 30 FPS</span>
+                                            <span class="cam-timestamp" id="cam-ts-3">10:47:05 AM</span>
+                                        </div>
+                                    </div>
+                                    <div class="cam-actions">
+                                        <button class="cam-action-btn toggle-feed" data-cam="living" title="Pause Stream"><i data-lucide="pause"></i></button>
+                                        <button class="cam-action-btn trigger-alert" data-cam="living" title="Simulate Motion"><i data-lucide="activity"></i> Simulate Motion</button>
+                                    </div>
+                                </div>
+
+                                <!-- Cam 4: Driveway -->
+                                <div class="cam-box glass-card">
+                                    <div class="cam-feed-wrapper">
+                                        <canvas class="cam-canvas" id="canvas-cam-driveway"></canvas>
+                                        <div class="cam-overlay">
+                                            <span class="cam-name">CAM-04: DRIVEWAY GATE</span>
+                                            <span class="cam-fps">1080p @ 30 FPS</span>
+                                            <span class="cam-timestamp" id="cam-ts-4">10:47:05 AM</span>
+                                        </div>
+                                    </div>
+                                    <div class="cam-actions">
+                                        <button class="cam-action-btn toggle-feed" data-cam="driveway" title="Pause Stream"><i data-lucide="pause"></i></button>
+                                        <button class="cam-action-btn trigger-alert" data-cam="driveway" title="Simulate Motion"><i data-lucide="activity"></i> Simulate Motion</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right pane: Alarm panel & Log -->
+                        <div class="security-controls-section glass-card">
+                            <h2>Security Arming Panel</h2>
+                            
+                            <div class="security-status-widget">
+                                <div class="status-shield armed" id="security-shield-large">
+                                    <i data-lucide="shield-check" id="shield-icon-large"></i>
+                                    <span id="shield-status-text">SYSTEM ARMED</span>
+                                </div>
+                                <div class="security-toggles">
+                                    <button class="security-arm-btn active" id="btn-security-disarm">DISARM</button>
+                                    <button class="security-arm-btn" id="btn-security-arm-home">ARM HOME</button>
+                                    <button class="security-arm-btn" id="btn-security-arm-away">ARM AWAY</button>
+                                </div>
+                            </div>
+
+                            <hr class="panel-divider">
+
+                            <div class="panic-system">
+                                <h3>Emergency Alarm System</h3>
+                                <p class="sub-descr">Instantly trigger high-decibel alarms and notify emergency response.</p>
+                                <button class="panic-btn" id="btn-panic-trigger">
+                                    <i data-lucide="bell-ring"></i> TRIGGER PANIC ALARM
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. ANALYTICS VIEW -->
+                <div class="view-panel" id="view-analytics">
+                    <div class="analytics-layout">
+                        <!-- Top Row charts -->
+                        <div class="analytics-charts-grid">
+                            <div class="analytics-chart-box glass-card">
+                                <h3 class="chart-title">Power Usage Breakdown by Room (W)</h3>
+                                <div class="analytics-canvas-container">
+                                    <canvas id="roomsEnergyChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="analytics-chart-box glass-card">
+                                <h3 class="chart-title">Power Consumption by Device Category</h3>
+                                <div class="analytics-canvas-container">
+                                    <canvas id="categoryEnergyChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom details metrics -->
+                        <div class="analytics-metrics-row">
+                            <div class="metric-card glass-card">
+                                <span class="m-lbl">Daily Projection</span>
+                                <span class="m-val" id="metric-daily-est">14.2 kWh</span>
+                                <span class="m-sub">Based on live device load</span>
+                            </div>
+                            <div class="metric-card glass-card">
+                                <span class="m-lbl">Eco Mode Savings</span>
+                                <span class="m-val green-text" id="metric-eco-savings">-24.5%</span>
+                                <span class="m-sub">12.8 lbs CO2 saved this week</span>
+                            </div>
+                            <div class="metric-card glass-card">
+                                <span class="m-lbl">Peak Demand Hour</span>
+                                <span class="m-val">6:30 PM</span>
+                                <span class="m-sub">Usually Kitchen & HVAC peaks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- UI Config Modal -->
+    <div class="modal-backdrop" id="modal-settings">
+        <div class="modal-box glass-card">
+            <div class="modal-header">
+                <h3><i data-lucide="settings"></i> System Settings</h3>
+                <button class="close-modal-btn" id="btn-close-settings"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-group">
+                    <label for="input-user-name">User Name</label>
+                    <input type="text" id="input-user-name" value="Alex Rivera">
+                </div>
+                <div class="settings-group">
+                    <label for="select-temp-unit">Temperature Unit</label>
+                    <select id="select-temp-unit">
+                        <option value="F" selected>Fahrenheit (°F)</option>
+                        <option value="C">Celsius (°C)</option>
+                    </select>
+                </div>
+                <div class="settings-group">
+                    <label class="checkbox-setting">
+                        <input type="checkbox" id="check-alert-notifications" checked>
+                        <span>Send system notifications on security triggers</span>
+                    </label>
+                </div>
+                <div class="settings-group">
+                    <label class="checkbox-setting">
+                        <input type="checkbox" id="check-sim-drift" checked>
+                        <span>Enable climate & environmental simulation drift</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-action-btn secondary" id="btn-reset-settings">Reset Defaults</button>
+                <button class="modal-action-btn primary" id="btn-save-settings">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script imports -->
+    <script src="app.js"></script>
+</body>
+</html>
